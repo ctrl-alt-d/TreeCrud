@@ -145,14 +145,16 @@ else
             uiNewNodes = uiNewNodes.Concat( borthers ).ToList();
         }
         List<UITreeNode> uiNewNodesPath = newNodes
-                                      .Select( x=>new UITreeNode { ParentId=x.ParentId, 
-                                                                   Id=x.Id, Text=x.Label,
-                                                                   IsExpanded=(x.Id!=Id),
-                                                                   IsSelected=(x.Id==Id),
-                                                                   Actions = RandomActions  } )
-                                      .ToList();
+                                          .Select( x=>new UITreeNode { ParentId=x.ParentId, 
+                                                                        Id=x.Id, Text=x.Label,
+                                                                        IsExpanded=(x.Id!=Id),
+                                                                        IsSelected=(x.Id==Id),
+                                                                        ChildrenLoaded=true,
+                                                                        Actions = RandomActions  } )
+                                          .ToList();
 
         uiNewNodes = uiNewNodes.Concat(uiNewNodesPath).ToList();
+        uiNewNodes.Where(x=>x.Id==Id).FirstOrDefault().hasChildren=false;
         return uiNewNodes;
     }
 
