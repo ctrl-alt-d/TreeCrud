@@ -24,13 +24,37 @@ namespace TreeCrud.App.Services
 
         public Task<TreeNode[]> GetNodesAsync(int? ParentId = null)
         {
-            if (!_isLoaded)
-            {
-                loadFakeData();
-            }
+            loadFakeData();
+
             TreeNode[] aux_nodes = nodes.Where(x => x.ParentId == ParentId).ToArray();
 
             return Task.FromResult(aux_nodes);
+
+        }
+
+        public Task<TreeNode[]> GetNodesToAsync(int Id)
+        {
+            loadFakeData();
+            List<TreeNode> aux_nodes = new List<TreeNode>();
+            TreeNode auxNode = new TreeNode();
+            auxNode.ParentId = Id;
+            do {
+                auxNode = nodes.Where(x => x.Id == auxNode.ParentId).FirstOrDefault();
+                if (auxNode!=null) {
+                    aux_nodes.Add(auxNode);
+                }
+            } while( auxNode != null && auxNode.ParentId!=null );
+            aux_nodes.Reverse();
+            return Task.FromResult(aux_nodes.ToArray() );
+        }
+
+        public Task<TreeNode> GetNodeAsync(int Id)
+        {
+            loadFakeData();
+
+            TreeNode aux_node = nodes.Where(x => x.Id == Id).FirstOrDefault();
+
+            return Task.FromResult(aux_node);
         }
 
         public Task<TreeNode> AddUnitatAsync(TreeNode unitat)
@@ -42,10 +66,12 @@ namespace TreeCrud.App.Services
 
         private static void loadFakeData()
         {
+            if (_isLoaded) return;
+
             int counter = nodes.Select(x => x.Id).Max() + 1;
             _isLoaded = true;
             List<int> nodesWithChildren = new List<int>();
-            while (counter < 1000)
+            while (counter < 300)
             {
                 var rng1 = new Random();
                 int elementAt = rng1.Next(0, nodes.Count());
