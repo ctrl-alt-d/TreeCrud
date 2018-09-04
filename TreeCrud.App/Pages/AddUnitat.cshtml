@@ -1,0 +1,100 @@
+@using TreeCrud.App.Services
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper  
+
+@page "/AddUnitat/{ParentId}"
+@inject TreeDataService TreeService
+
+<h1>Add Unitat</h1>
+
+@if( parentIdIsValid ) {
+
+    <div class="row">  
+        <div class="col-md-4">  
+            <form>  
+                <div class="form-group">  
+                    <label for="Name" class="control-label">Label</label>  
+                    <input for="Name" class="form-control" bind=@unitat.Label />  
+                </div>  
+                <div class="form-group">  
+                    <label asp-for="Gender" class="control-label">Type</label>  
+                    <select asp-for="Gender" class="form-control" bind=@unitat.Type >  
+                        <option value="">-- Select Type --</option>  
+                        <option value="Tipus A">Tipus A</option>  
+                        <option value="Tipus B">Tipus B</option>  
+                    </select>  
+                </div>  
+                <div class="form-group">  
+                    <label asp-for="Department" class="control-label">Description</label>  
+                    <input asp-for="Department" class="form-control" bind=@unitat.Description />  
+                </div>  
+                <div class="form-group">  
+                    <label asp-for="City" class="control-label">Date</label>  
+                    <input asp-for="City" class="form-control" format-value="dd/MM/yyyy" bind=@unitat.Date />  
+                </div>  
+                <div class="form-group">  
+                    <button type="button" class="btn btn-outline-success" onclick=@(async () => await CreateUnitat() )>Save</button>  
+                    <a class="btn  btn-outline-dark" href="/tree" role="button">Cancelar</a>  
+                </div>  
+                
+            </form>  
+        </div>  
+    </div>  
+
+    <div class="row @visibilitat">
+    <p>Unitat @(unitat.Label) desada correctament </p>
+    <a class="btn btn-outline-dark" href=$"/tree/{unitat.Id}">back</a>
+    </div>
+
+} else {
+    <div class="row">
+    <p>You should to inform a valid Unitat parent</p>
+    <br>
+    <a class="btn btn-outline-dark" href="/tree">back</a>
+    </div>
+}
+
+@functions {  
+    [Parameter]
+    private string ParentId { get; set; }
+
+    string visibilitat = "d-none";
+    TreeNode unitat = new TreeNode( );
+
+    bool MostrarConfirmacio = false;
+
+    private bool parentIdIsValid {
+        get {
+            try {
+                int m = Int32.Parse(ParentId);
+                TreeNode unitat_aux = TreeService.GetNodeAsync( m ).GetAwaiter().GetResult();
+                return ( string.IsNullOrEmpty(ParentId) || unitat_aux != null );
+            }
+            catch (FormatException) {
+                return false;
+            };
+        }
+    }
+
+    protected async Task CreateUnitat()  
+    {  
+        try {
+            int m = Int32.Parse(ParentId);
+            TreeNode unitat_aux = TreeService.GetNodeAsync( m ).GetAwaiter().GetResult();
+            if ( unitat_aux != null ) {
+                unitat.ParentId = m;
+            }
+        }
+        catch (FormatException) {
+            unitat.ParentId = null;
+        };        
+        
+        unitat = await TreeService.AddUnitatAsync(unitat);
+
+        if (MostrarConfirmacio)
+            visibilitat="";
+        else
+            UriHelper.NavigateTo($"/Tree/{unitat.Id}");  
+    }  
+
+
+}

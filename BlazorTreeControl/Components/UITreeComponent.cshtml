@@ -45,7 +45,7 @@
     public Func<int, Task<bool>> CollapseAsyncDelegate { get; protected set; } = null;   
 
     [Parameter]
-    public Func<int, string, Task<bool>> TriggerActionAsyncDelegate { get; protected set; } = null;   
+    public Func<int, string, Task> TriggerActionAsyncDelegate { get; protected set; } = null;   
         
 
     [Parameter]

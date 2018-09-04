@@ -2,8 +2,10 @@
 @using System.Linq
 @using System.Collections.Generic
 @using BlazorTreeControl
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper  
 
 @page "/tree"
+@page "/tree/{par_SelectedId}"
 @inject TreeDataService TreeService
 
 <h1>Sample Tree</h1>
@@ -45,7 +47,9 @@ else
 
 @functions {
 
-    //UITreeComponent myUiTree;
+    [Parameter]
+    private string par_SelectedId { get; set; } = "";
+
     UITree uiTree = new UITree();
     private UITreeNode selectedNode {get; set;} = new UITreeNode();
     private string someLogText;
@@ -62,13 +66,23 @@ else
         return await Task.FromResult(true);
     }
 
-    private async Task<bool> OnAction(int Id, string actionName)
+    private async Task OnAction(int Id, string actionName)
     {
-        someLogText = $"Trigger {actionName} on {Id}";
-        System.Console.WriteLine($"Han executat: {someLogText}") ;
+        await Task.Run(() =>
+        {
+            someLogText = $"Trigger {actionName} on {Id}";
+            System.Console.WriteLine($"Han executat: {someLogText}");
 
-        StateHasChanged();
-        return await Task.FromResult(true);
+            if (actionName == "Nova unitat")
+            {
+                System.Console.WriteLine("add unitat " + Id);
+                UriHelper.NavigateTo($"/AddUnitat/{Id}");
+            }
+            else
+            {
+                StateHasChanged();
+            }
+        });
     }
 
     private void OnSelectionChanged(UIMouseEventArgs e, UITreeNode node ) {
@@ -83,26 +97,64 @@ else
 
     protected override async Task OnInitAsync()
     {
-        uiTree.uiNodes = await LoadNodes();
+        int IdSelectedNode;
+        if (!string.IsNullOrEmpty(par_SelectedId) && int.TryParse( par_SelectedId, out IdSelectedNode ) ) {
+            uiTree.uiNodes = await LoadNodesTo(IdSelectedNode);
+            selectedNode = uiTree.uiNodes.Where(x=> x.Id==IdSelectedNode).Select(x=>x).FirstOrDefault();
+        } else {
+            uiTree.uiNodes = await LoadNodes();
+        }
         uiTree.ReArrange( );
     }
 
     private async Task<List<UITreeNode>> LoadNodes(int? ParentId = null)
     {
-        //Load tree from 'database'
-        TreeNode[] newNodes = await TreeService.GetNodesAsync(ParentId);
         //Transform 'database' data to 'UI' data
         List<UITreeNodeAction> RandomActions = new List<UITreeNodeAction>() {
                   new UITreeNodeAction { Name = "Refresh", OpenIconic = "oi oi-reload" },
-                  new UITreeNodeAction { Name = "Delete", OpenIconic = "oi oi-delete" },
+                  new UITreeNodeAction { Name = "Nova unitat", OpenIconic = "oi oi-add" },
                   new UITreeNodeAction { Name = "Edit", OpenIconic = "oi oi-pencil",    IsEsabled = false }
-            };
+        };
+
+        //Load tree from 'database'
+        TreeNode[] newNodes = await TreeService.GetNodesAsync(ParentId);
+
         List<UITreeNode> uiNewNodes = newNodes
-                                      .Where(x=>x.ParentId==ParentId)
                                       .Select( x=>new UITreeNode { ParentId=x.ParentId, 
                                                                    Id=x.Id, Text=x.Label,
                                                                    Actions = RandomActions  } )
                                       .ToList();
+        return uiNewNodes;
+    }
+
+    private async Task<List<UITreeNode>> LoadNodesTo(int Id)
+    {
+        //Transform 'database' data to 'UI' data
+        List<UITreeNodeAction> RandomActions = new List<UITreeNodeAction>() {
+                  new UITreeNodeAction { Name = "Refresh", OpenIconic = "oi oi-reload" },
+                  new UITreeNodeAction { Name = "Nova unitat", OpenIconic = "oi oi-add" },
+                  new UITreeNodeAction { Name = "Edit", OpenIconic = "oi oi-pencil",    IsEsabled = false }
+            };
+
+        //Load tree from 'database'
+        TreeNode[] newNodes = await TreeService.GetNodesToAsync(Id);
+        List<UITreeNode> uiNewNodes = new List<UITreeNode>();
+        foreach( TreeNode t in newNodes ) {
+            List<UITreeNode> borthers = await LoadNodes(t.ParentId);
+            borthers = borthers.Where(x=>x.Id != t.Id ).ToList();
+            uiNewNodes = uiNewNodes.Concat( borthers ).ToList();
+        }
+        List<UITreeNode> uiNewNodesPath = newNodes
+                                          .Select( x=>new UITreeNode { ParentId=x.ParentId, 
+                                                                        Id=x.Id, Text=x.Label,
+                                                                        IsExpanded=(x.Id!=Id),
+                                                                        IsSelected=(x.Id==Id),
+                                                                        ChildrenLoaded=true,
+                                                                        Actions = RandomActions  } )
+                                          .ToList();
+
+        uiNewNodes = uiNewNodes.Concat(uiNewNodesPath).ToList();
+        uiNewNodes.Where(x=>x.Id==Id).FirstOrDefault().hasChildren=false;
         return uiNewNodes;
     }
 
