@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TreeCrud.App", "TreeCrud.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTreeControl", "BlazorTreeControl\BlazorTreeControl.csproj", "{3BBCA087-8C81-4C11-8B77-C45EBF9778A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeCrud.GraphQL", "TreeCrud.GraphQL\TreeCrud.GraphQL.csproj", "{D6FEE1DA-EFD7-474F-82AE-D643A7224049}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{3BBCA087-8C81-4C11-8B77-C45EBF9778A4}.Release|x64.Build.0 = Release|Any CPU
 		{3BBCA087-8C81-4C11-8B77-C45EBF9778A4}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BBCA087-8C81-4C11-8B77-C45EBF9778A4}.Release|x86.Build.0 = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|x64.Build.0 = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Debug|x86.Build.0 = Debug|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|x64.ActiveCfg = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|x64.Build.0 = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|x86.ActiveCfg = Release|Any CPU
+		{D6FEE1DA-EFD7-474F-82AE-D643A7224049}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
