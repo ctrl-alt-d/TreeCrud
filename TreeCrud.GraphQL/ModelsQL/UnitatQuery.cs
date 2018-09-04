@@ -16,6 +16,11 @@ namespace TreeCrud.DataLayer.Models.GraphQL
                 resolve: context => repo.GetNodeAsync(context.GetArgument<int>("id")).Result
             );
 
+            Field<ListGraphType<UnitatType>>(
+                "nodes",
+                resolve: context => repo.GetRootAsync().Result
+            );
+
         }
     }
 }

@@ -46,6 +46,7 @@ namespace TreeCrud.GraphQL
 
             services.AddScoped<UnitatQuery>();
             services.AddTransient<UnitatType>();
+            services.AddTransient<RootUnitatsType>();
             services.AddScoped<ISchema, UnitatSchema>();
 
             services.AddTransient<IUnitatsRepository, UnitatsRepository>();

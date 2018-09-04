@@ -7,7 +7,7 @@ namespace TreeCrud.DataLayer.Data
 {
     public interface IUnitatsRepository
     {
-        Task<List<Unitat>> GetRoot();
+        Task<List<Unitat>> GetRootAsync();
         Task<Unitat> GetNodeAsync(int id);
         Task<List<Unitat>> GetChildrenAsync(int id);
     }

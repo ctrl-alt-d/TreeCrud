@@ -22,7 +22,7 @@ namespace TreeCrud.DataLayer.Data
 
         public async Task<Unitat> GetNodeAsync(int id) => await _context.Unitats.FindAsync(id);
 
-        public Task<List<Unitat>> GetRoot()
+        public Task<List<Unitat>> GetRootAsync()
         {
             return Task.FromResult(_context.Unitats.Where(x => x.ParentId == null).ToList());
         }
