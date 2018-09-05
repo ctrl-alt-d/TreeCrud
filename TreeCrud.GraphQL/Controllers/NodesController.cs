@@ -10,6 +10,7 @@ using GraphQL.Http;
 using System.Net.Http;
 using GraphQL.Validation.Complexity;
 using GraphQL.Instrumentation;
+using TreeCrud.DataLayer.Data;
 
 namespace TreeCrud.GraphQL.Controllers
 {
@@ -25,13 +26,17 @@ namespace TreeCrud.GraphQL.Controllers
         private readonly IDocumentWriter _writer;
         private readonly IDictionary<string, string> _namedQueries;
 
+        private readonly IUnitatsRepository _repository;
+
         public NodesController(IDocumentExecuter documentExecuter,
                                IDocumentWriter writer,
-                               ISchema schema)
+                               ISchema schema,
+                               IUnitatsRepository repo)
         {
             _documentExecuter = documentExecuter;
             _writer = writer;
             _schema = schema;
+            _repository = repo;
         }
 
         [HttpGet]
@@ -67,22 +72,28 @@ namespace TreeCrud.GraphQL.Controllers
                     return BadRequest(result);
                 }
 
-                //var httpResult = result.Errors?.Count > 0
-                //    ? HttpStatusCode.BadRequest
-                //    : HttpStatusCode.OK;
-
                 var json = _writer.Write(result);
 
                 return Ok(result);
-                //            var response = request.CreateResponse(httpResult);
-                //            response.Content = new StringContent(json, Encoding.UTF8, "application/json");
-                //            return response;
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
 
+        }
+
+        [HttpPost]
+        [Route("add")]
+        public async Task<IActionResult> Add([FromBody]Unitat value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _repository.Add(value);
+            return Ok("Created");
         }
     }
 

@@ -15,6 +15,12 @@ namespace TreeCrud.DataLayer.Data
             _context = context;
         }
 
+        public Task Add(Unitat unitat)
+        {
+            _context.Unitats.Add(unitat);
+            return _context.SaveChangesAsync();
+        }
+
         public Task<List<Unitat>> GetChildrenAsync(int id)
         {
             return Task.FromResult(_context.Unitats.Where(x => x.ParentId == id).ToList());

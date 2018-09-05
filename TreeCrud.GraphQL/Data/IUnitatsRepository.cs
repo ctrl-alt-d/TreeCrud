@@ -10,5 +10,7 @@ namespace TreeCrud.DataLayer.Data
         Task<List<Unitat>> GetRootAsync();
         Task<Unitat> GetNodeAsync(int id);
         Task<List<Unitat>> GetChildrenAsync(int id);
+
+        Task Add(Unitat unitat);
     }
 }
