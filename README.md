@@ -1,8 +1,8 @@
-# BlazorServerTree
+# Blazor Tree CRUD
 
 A simple Server-Side Blazor CRUD app to deal with hierarchical data.
 
-The project has a fake data layer service that allow running it without database backend configuration. We are migrating fake data layer to a real one with SQLGraph for R (Retrieve) and Rest for CUD (Create Update Delete)
+Project has a data layer with SQLGraph for R (Retrieve) and classical Rest for CUD (Create Update Delete)
 
 The basic functionality is ready:
 
@@ -10,8 +10,6 @@ The basic functionality is ready:
 * Select and unselect a node.
 * Insert new nodes
 * ToDo: Update, Delete
-* ToDo: Real data layer and data on database.
-
 
 ### Screenshot ( because all us love screenshots ):
 
@@ -39,6 +37,12 @@ The basic functionality is ready:
     }
 
 ```
+
+### How to run?
+
+1. Launch GraphQL server: `( cd TreeCrud.Server/; dotnet run )`
+2. Launch Blazor Server: `( cd TreeCrud.GraphQL/; ASPNETCORE_URLS="http://127.0.0.1:6000" dotnet run  )`
+
 
 ### Can I use `UITreeComponent` on my project?
 

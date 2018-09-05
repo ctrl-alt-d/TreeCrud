@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorTreeControl\BlazorTreeControl.csproj" />
-    <ProjectReference Include="..\TreeCrud.DataLayer\TreeCrud.DataLayer.csproj" />
   </ItemGroup>
 
 </Project>
