@@ -13,8 +13,8 @@ namespace TreeCrud.DataLayer.Models
         public int? ParentId { get; set; }
         public string Label { get; set; }
         public string Description { get; set; }
-        public string Tipus { get; set; }
-        public DateTime Data { get; set; }
+        public string Type { get; set; }
+        public DateTime Date { get; set; }
 
     }
 }
