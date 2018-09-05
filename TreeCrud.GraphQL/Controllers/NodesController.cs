@@ -85,7 +85,7 @@ namespace TreeCrud.GraphQL.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromBody]Unitat value)
+        public async Task<ActionResult<Unitat>> Add([FromBody]Unitat value)
         {
             if (!ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace TreeCrud.GraphQL.Controllers
             }
 
             await _repository.Add(value);
-            return Ok("Created");
+            return Ok(value);
         }
     }
 

@@ -65,8 +65,11 @@
     private bool parentIdIsValid {
         get {
             try {
+                System.Console.WriteLine($"debug ................ 1");
                 int m = Int32.Parse(ParentId);
+                System.Console.WriteLine($"debug .....{ m } ........... 2");
                 TreeNode unitat_aux = TreeService.GetNodeAsync( m ).GetAwaiter().GetResult();
+                System.Console.WriteLine($"debug .............{unitat_aux}... 3");
                 return ( string.IsNullOrEmpty(ParentId) || unitat_aux != null );
             }
             catch (FormatException) {
@@ -77,9 +80,10 @@
 
     protected async Task CreateUnitat()  
     {  
+        
         try {
             int m = Int32.Parse(ParentId);
-            TreeNode unitat_aux = TreeService.GetNodeAsync( m ).GetAwaiter().GetResult();
+            TreeNode unitat_aux = await TreeService.GetNodeAsync( m );
             if ( unitat_aux != null ) {
                 unitat.ParentId = m;
             }

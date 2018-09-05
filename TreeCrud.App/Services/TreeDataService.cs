@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using GraphQL.Common.Request;
 using GraphQL.Client;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace TreeCrud.App.Services
 {
@@ -74,7 +76,7 @@ namespace TreeCrud.App.Services
 
         }
 
-        public Task<TreeNode[]> GetNodesToAsync(int Id)
+        public async Task<TreeNode[]> GetNodesToAsync(int Id)
         {
 
             List<TreeNode> aux_nodes = new List<TreeNode>();
@@ -82,30 +84,73 @@ namespace TreeCrud.App.Services
             auxNode.ParentId = Id;
             do
             {
-                auxNode = nodes.Where(x => x.Id == auxNode.ParentId).FirstOrDefault();
+                auxNode = await GetNodeAsync(auxNode.ParentId.Value);
                 if (auxNode != null)
                 {
                     aux_nodes.Add(auxNode);
                 }
             } while (auxNode != null && auxNode.ParentId != null);
             aux_nodes.Reverse();
-            return Task.FromResult(aux_nodes.ToArray());
+            return aux_nodes.ToArray();
         }
 
         public Task<TreeNode> GetNodeAsync(int Id)
         {
+            TreeNode aux_node = null;
 
+            GraphQLRequest request = new GraphQLRequest
+            {
+                Query = @"
+                        {
+                          node(id:" + Id + @") {
+                            id,
+                            parentId,
+                            label,
+                            date
+                            }
+                        }"
+            };
 
-            TreeNode aux_node = nodes.Where(x => x.Id == Id).FirstOrDefault();
+            var graphQLClient = new GraphQLClient("http://localhost:6000/api/nodes");
+            System.Console.WriteLine($"-- to POST {Id}");
+            try
+            {
+                var graphQLResponse = graphQLClient.PostAsync(request).GetAwaiter().GetResult();
+                //var graphQLResponse = graphQLClient.Post(request);
+                var x = graphQLResponse.Data.node;
+                System.Console.WriteLine(x);
+                aux_node = x.ToObject<TreeNode>();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+            }
+
+            System.Console.WriteLine("-- after POST");
 
             return Task.FromResult(aux_node);
         }
 
-        public Task<TreeNode> AddUnitatAsync(TreeNode unitat)
+        public async Task<TreeNode> AddUnitatAsync(TreeNode unitat)
         {
-            unitat.Id = nodes.Select(X => X.Id).Max() + 1;
-            nodes.Add(unitat);
-            return Task.FromResult(unitat);
+            TreeNode unitat_aux = null;
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.PostAsync("http://localhost:6000/api/nodes/add", TreeNode2Json(unitat));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                unitat_aux = JsonConvert.DeserializeObject<TreeNode>(json);
+            }
+            return unitat_aux;
+
+        }
+
+        public static StringContent TreeNode2Json(TreeNode tree)
+        {
+            var content = JsonConvert.SerializeObject(tree);
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+            return stringContent;
         }
     }
 }
