@@ -11,6 +11,8 @@ The basic functionality is ready:
 * Insert new nodes
 * ToDo: Update, Delete
 
+> Backend by [@utrescu](https://github.com/utrescu/) Frontend by [@ctrl-alt-a](https://github.com/ctrl-alt-d).
+
 ### Screenshot ( because all us love screenshots ):
 
 ![screenshot](./Screenshots/theCrud.gif)
