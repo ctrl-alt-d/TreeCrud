@@ -72,10 +72,10 @@
         UITreeNode n = SourceData.uiNodes.Where(x=>x.Id == Id).First();
         n.IsExpanded = !n.IsExpanded;
         if (n.IsExpanded && !n.ChildrenLoaded) {
-            n.ChildrenLoaded = true;
             List<UITreeNode> uiNewNodes = await LazyLoadNodesAsyncDelegate(Id);
             SourceData.uiNodes = (SourceData.uiNodes == null)? uiNewNodes : uiNewNodes.Concat( SourceData.uiNodes ).ToList();
             n.hasChildren = uiNewNodes.Any();
+            n.ChildrenLoaded = true;
         }
         fixup();
         if ( n.IsExpanded && ExpandAsyncDelegate != null ) {
