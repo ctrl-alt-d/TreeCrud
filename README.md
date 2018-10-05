@@ -2,7 +2,7 @@
 
 A simple Server-Side Blazor CRUD app to deal with hierarchical data.
 
-Project has a data layer with SQLGraph for R (Retrieve) and classical Rest for CUD (Create Update Delete)
+Project has a data layer with GraphQL for R (Retrieve) and classical Rest for CUD (Create Update Delete)
 
 The basic functionality is ready:
 
