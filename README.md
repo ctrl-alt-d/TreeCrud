@@ -1,5 +1,7 @@
 # Blazor Tree CRUD
 
+>DISCLAIMER: This code is almost 1 year old and it is not maintained.
+
 A simple Server-Side Blazor CRUD app to deal with hierarchical data.
 
 Project has a data layer with GraphQL for R (Retrieve) and classical Rest for CUD (Create Update Delete)
